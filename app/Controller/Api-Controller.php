@@ -24,25 +24,30 @@ class ApiController
 
     public function getProducts($params = null)
     {
+        //$filter = $_GET['filter'] ?? null;  si no va por get, toma el valor null
+        // en lugar de definirla si existe, le digo que tome el valor de $_GET 
+        // (pero que si falla eso, le asigne el valor null)
         try{
+           
             $array = [];
+            $filter = null; //lo declaro con null
             if(isset($_GET['orderBy'])){
                 $array['orderBy'] = $_GET['orderBy']; 
             
                 if(isset($_GET['sort'])){
                     $array['sort'] = $_GET['sort'];
                 }  
-       
+            }
                 else if(isset($_GET['filter'])){
-                    $filter= $_GET['filter'];
+                    $filter = $_GET['filter'];
               
                 }   
-            }   
+               
         var_dump($array);
         $products = $this->prodmodel->getAll($array, $filter);
         $this->view->response($products, 200);
-             
-        }catch(Exception){
+        }     
+        catch(Exception){
             $this->view->response("hubo un error", 400);
         }
     }
