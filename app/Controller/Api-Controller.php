@@ -22,47 +22,76 @@ class ApiController
         return json_decode($this->data);
     }
 
+
+
     public function getProducts($params = null)
     {
-        //$filter = $_GET['filter'] ?? null;  si no va por get, toma el valor null
-        // en lugar de definirla si existe, le digo que tome el valor de $_GET 
-        // (pero que si falla eso, le asigne el valor null)
-        try{
-           
-            $array = [];
-            $filter = null; //lo declaro con null
-            if(isset($_GET['orderBy'])){
-                $array['orderBy'] = $_GET['orderBy']; 
+
+
+        // $filter = ['id_Marca','Variedad','Descripcion','Precio'];
+        // $filter = null; //lo declaro con null
+        if (isset($_GET['orderBy']) && ($_GET['orderBy'] == !null)) {
+            $orderBy = $_GET['orderBy'];
+        
+            // if($_GET['orderBy']== null){
+            //         $orderBy = "id_Marca";
+            // }
+        
+            if (isset($_GET['sort']) && ($_GET['sort'])) {
+                $sort = $_GET['sort'];
             
-                if(isset($_GET['sort'])){
-                    $array['sort'] = $_GET['sort'];
-                }  
+            $products = $this->prodmodel->getAllOrder($orderBy, $sort);
+            $this->view->response($products, 200);
             }
-                else if(isset($_GET['filter'])){
-                    $filter = $_GET['filter'];
-              
-                }   
-               
-        var_dump($array);
-        $products = $this->prodmodel->getAll($array, $filter);
-        $this->view->response($products, 200);
-        }     
-        catch(Exception){
+            // como verifico errores de entrada de datos
+            // if(($_GET['sort']==null)&&($_GET['sort']==null)){
+            //     $this->view->response("Los parametros son incorrectos", 400);
+            // }
+        
+                // esta bien hacer un array para el filtrado 
+            // if(isset($_GET['filter'])){
+            //     $filter = $_GET['filter'];
+            //     $products = $this->prodmodel->getAllFilter($filter);
+            //     $this->view->response($products, 200);
+            // }
+        }
+        // }else{
+        //         $filter = null;
+        // }
+
+        
+        if($params ==null){
+            $products = $this->prodmodel->getAll();
+            $this->view->response($products, 200);
+        }
+            else{
             $this->view->response("hubo un error", 400);
         }
     }
-       
+    
+
+
+
+
+
+
+
+
 
     public function getProduct($params = null)
     {
         $id = $params[':ID'];
+
         $product = $this->prodmodel->getById($id); //esta bien que sea getbyid?
 
-
-        if ($product) { //response es la funcion que obtiene el json mas el status
-            $this->view->response($product);
-        } else { // si no existe devuelvo 404
-            $this->view->response("El producto con el id= $id no existe", 404);
+        if (is_numeric($id) && ($id > 1)) { //si es numero y es mayor a 1 
+            if ($product) {
+                $this->view->response($product); //muestros los prooductos
+            } else {
+                $this->view->response("El producto con el id= $id no existe", 404); // no se encutra
+            }
+        } else {
+            $this->view->response("El parametro es incorrecto", 400); //bad request
         }
     }
 
@@ -71,13 +100,16 @@ class ApiController
         $id = $params[':ID'];
 
         $product = $this->prodmodel->getById($id); // obtengo el producto segun su id
-
-        if ($product) {
-            $this->prodmodel->deleteProductById($id); //borro el producto segun su id 
-
-            $this->view->response($product);
-        } else
-            $this->view->response("El producto con el id= $id no existe", 404);
+        if (is_numeric($id) && ($id > 1)) {
+            if ($product) {
+                $this->prodmodel->deleteProductById($id); //borro el producto segun su id 
+                $this->view->response($product);
+            } else {
+                $this->view->response("El producto con el id= $id no existe", 404);
+            }
+        } else {
+            $this->view->response("El parametro es incorrecto", 400);
+        }
     }
 
 
@@ -112,6 +144,4 @@ class ApiController
         } else
             $this->view->response("not found", 404);
     }
-
-   
 }
