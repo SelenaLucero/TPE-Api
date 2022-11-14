@@ -27,48 +27,41 @@ class ApiController
     public function getProducts($params = null)
     {
 
-
-        // $filter = ['id_Marca','Variedad','Descripcion','Precio'];
-        // $filter = null; //lo declaro con null
-        if (isset($_GET['orderBy']) && ($_GET['orderBy'] == !null)) {
+        if ((isset($_GET['orderBy']))&&(isset($_GET['sort']))){
             $orderBy = $_GET['orderBy'];
+            $sort = $_GET['sort'];
+
         
-            // if($_GET['orderBy']== null){
-            //         $orderBy = "id_Marca";
-            // }
-        
-            if (isset($_GET['sort']) && ($_GET['sort'])) {
-                $sort = $_GET['sort'];
-            
             $products = $this->prodmodel->getAllOrder($orderBy, $sort);
             $this->view->response($products, 200);
-            }
-            // como verifico errores de entrada de datos
-            // if(($_GET['sort']==null)&&($_GET['sort']==null)){
-            //     $this->view->response("Los parametros son incorrectos", 400);
-            // }
-        
-                // esta bien hacer un array para el filtrado 
-            // if(isset($_GET['filter'])){
-            //     $filter = $_GET['filter'];
-            //     $products = $this->prodmodel->getAllFilter($filter);
-            //     $this->view->response($products, 200);
-            // }
-        }
-        // }else{
-        //         $filter = null;
-        // }
 
-        
-        if($params ==null){
+            
+        } 
+          
+            if ($params == null) {
             $products = $this->prodmodel->getAll();
             $this->view->response($products, 200);
-        }
-            else{
+            
+            }
+       else {
             $this->view->response("hubo un error", 400);
-        }
-    }
+        }    
+                                  
+    }              
+
+        
+
+        
+        
     
+       
+    
+       
+
+
+    
+    
+
 
 
 

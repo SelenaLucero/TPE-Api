@@ -16,63 +16,43 @@ class ProdModel
         $db = new PDO('mysql:host=localhost;' . 'dbname=db_vinoteca;charset=utf8', 'root', '');
         return $db;
     }
-   
-    
-    
 
-        function getAll()
+
+
+
+    function getAll()
     {
-        $query = "SELECT * FROM producto";
-        
+        $query = "SELECT producto.* , marca.Marca FROM producto JOIN marca 
+        ON producto.id_Marca = marca.id_Marca";
+
         $queryDB = $this->db->prepare($query); // paso la consulta completa
         $queryDB->execute();
         $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
         return $products;
     }
-        function getAllOrder($orderBy,$sort){
+    function getAllOrder($orderBy, $sort)
+    {
 
-            $query = "SELECT * FROM producto ORDER BY $orderBy $sort";
-            $queryDB = $this->db->prepare($query); // paso la consulta completa
-            $queryDB->execute();
-            $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
-            return $products;
-    
-        }   
-         function getAllFilter($filter){
-            $query = "SELECT * FROM producto WHERE producto.Variedad = $filter ";
-            $queryDB = $this->db->prepare($query); // paso la consulta completa
-            $queryDB->execute([$filter]);
-         }
-    
-        
-        // $query = "SELECT * FROM producto ORDER BY  ? ? WHERE producto.Variedad = ? ";
+        $query = "SELECT producto.* , marca.Marca FROM producto JOIN marca 
+        ON producto.id_Marca = marca.id_Marca ORDER BY $orderBy $sort";
+        $queryDB = $this->db->prepare($query); // paso la consulta completa
+        $queryDB->execute();
+        $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
+        return $products;
+    }
+   
 
-        //     $queryDB = $this->db->prepare($query); // paso la consulta completa
-        //     $queryDB->execute([$orderBy,$sort,$filter]);
-        //     $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
-        //     return $products;
     
-    // function getAllOrder($orderBy,$sort){
+    function getAllFilter($filter)
+    {
+        $query = "SELECT producto.* , marca.Marca FROM producto JOIN marca 
+        ON producto.id_Marca = marca.id_Marca WHERE $filter = ?";
+        $queryDB = $this->db->prepare($query); // paso la consulta completa
+        $queryDB->execute();
+    }
 
-    //     $query = "SELECT * FROM producto ORDER BY '. $orderBy $sort";
-        
-    //       $queryDB = $this->db->prepare($query); // paso la consulta completa
-    //       $queryDB->execute();
-    //       $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
-    //         return $products;
-    // }
-    // function getAllFilter($filter){
-    //     $query = "SELECT * FROM producto";
-    //     $query .= " WHERE producto.Variedad = $filter";
-        
-    //         $queryDB = $this->db->prepare($query); // paso la consulta completa
-    //         $queryDB->execute();
-    //         $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
-    //         return $products;
-    // }
-           
     
-
+   
 
 
     function getById($id)
@@ -109,10 +89,6 @@ class ProdModel
     function updateProduct($id_Marca, $Variedad, $Descripcion, $Precio, $id)
     {
         $query = $this->db->prepare('UPDATE producto SET id_Marca=?, Variedad =?, Descripcion=? , Precio = ? WHERE id = ?');
-        $query->execute([$id_Marca,$Variedad, $Descripcion, $Precio, $id]);
+        $query->execute([$id_Marca, $Variedad, $Descripcion, $Precio, $id]);
     }
-
-
-    
-
 }
