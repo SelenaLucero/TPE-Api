@@ -3,7 +3,7 @@ require_once 'app/Api-models/prod.model.php';
 require_once 'app/Api-View/Api-View.php';
 
 class ApiController
-{ //esta mal este nombre?
+{ 
     private $prodmodel;
     private $view;
     private $data;
@@ -25,7 +25,7 @@ class ApiController
 
     public function getProducts($params = null)
     {
-        $filterBy=['id_Marca,Variedad,Descripcion,Precio'];
+        
         try {
             if ((isset($_GET['orderBy'])) && (isset($_GET['sort']))) {
                 $orderBy = $_GET['orderBy'];
@@ -36,59 +36,30 @@ class ApiController
                 if ((isset($_GET['orderBy'])==null) && (isset($_GET['sort'])==null)) {
                     $this->view->response("Los parametros son incorrectos", 400);
                 }
-                
-            }else if(isset($_GET['filter'])){
-                $filter = $_GET['filter'];
-                    
-                    $products = $this->prodmodel->getAllFilter($filter);
-                    $this->view->response($products, 200);
-                   
-                }
+            }
             else {
                 $products = $this->prodmodel->getAll();
                 $this->view->response($products, 200);
             }
         } catch (Exception) {
-            
             $this->view->response("Error", 500);
         }
     }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function getProduct($params = null)
     {
         $id = $params[':ID'];
 
-        $product = $this->prodmodel->getById($id); //esta bien que sea getbyid?
+        $product = $this->prodmodel->getById($id); 
 
-        if (is_numeric($id) && ($id > 1)) { //si es numero y es mayor a 1 
+        if (is_numeric($id) && ($id > 1)) { 
             if ($product) {
-                $this->view->response($product); //muestros los prooductos
+                $this->view->response($product); 
             } else {
-                $this->view->response("El producto con el id= $id no existe", 404); // no se encutra
+                $this->view->response("El producto con el id= $id no existe", 404); 
             }
         } else {
-            $this->view->response("El parametro es incorrecto", 400); //bad request
+            $this->view->response("El parametro es incorrecto", 400);
         }
     }
 
@@ -96,10 +67,10 @@ class ApiController
     {
         $id = $params[':ID'];
 
-        $product = $this->prodmodel->getById($id); // obtengo el producto segun su id
+        $product = $this->prodmodel->getById($id); 
         if (is_numeric($id) && ($id > 1)) {
             if ($product) {
-                $this->prodmodel->deleteProductById($id); //borro el producto segun su id 
+                $this->prodmodel->deleteProductById($id); 
                 $this->view->response($product);
             } else {
                 $this->view->response("El producto con el id= $id no existe", 404);
@@ -119,7 +90,7 @@ class ApiController
         } else {
             $id = $this->prodmodel->insertProd($product->id_Marca, $product->Variedad, $product->Descripcion, $product->Precio);
             $product = $this->prodmodel->getById($id);
-            $this->view->response($product, 201); //inserta el producto con exito!
+            $this->view->response($product, 201); 
         }
     }
 
