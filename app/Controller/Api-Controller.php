@@ -23,44 +23,48 @@ class ApiController
     }
 
 
-
     public function getProducts($params = null)
     {
+        $filterBy=['id_Marca,Variedad,Descripcion,Precio'];
+        try {
+            if ((isset($_GET['orderBy'])) && (isset($_GET['sort']))) {
+                $orderBy = $_GET['orderBy'];
+                $sort = $_GET['sort'];
 
-        if ((isset($_GET['orderBy']))&&(isset($_GET['sort']))){
-            $orderBy = $_GET['orderBy'];
-            $sort = $_GET['sort'];
-
-        
-            $products = $this->prodmodel->getAllOrder($orderBy, $sort);
-            $this->view->response($products, 200);
-
-            
-        } 
-          
-            if ($params == null) {
-            $products = $this->prodmodel->getAll();
-            $this->view->response($products, 200);
-            
+                $products = $this->prodmodel->getAllOrder($orderBy, $sort);
+                $this->view->response($products, 200);
+                if ((isset($_GET['orderBy'])==null) && (isset($_GET['sort'])==null)) {
+                    $this->view->response("Los parametros son incorrectos", 400);
+                }
+                
+            }else if(isset($_GET['filter'])){
+                $filter = $_GET['filter'];
+                    
+                    $products = $this->prodmodel->getAllFilter($filter);
+                    $this->view->response($products, 200);
+                   
+                }
+            else {
+                $products = $this->prodmodel->getAll();
+                $this->view->response($products, 200);
             }
-       else {
-            $this->view->response("hubo un error", 400);
-        }    
-                                  
-    }              
-
-        
-
-        
-        
+        } catch (Exception) {
+            
+            $this->view->response("Error", 500);
+        }
+    }
     
-       
-    
-       
 
 
-    
-    
+
+
+
+
+
+
+
+
+
 
 
 

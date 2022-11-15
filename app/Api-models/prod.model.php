@@ -29,6 +29,7 @@ class ProdModel
         $queryDB->execute();
         $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
         return $products;
+
     }
     function getAllOrder($orderBy, $sort)
     {
@@ -45,14 +46,18 @@ class ProdModel
     
     function getAllFilter($filter)
     {
+        
         $query = "SELECT producto.* , marca.Marca FROM producto JOIN marca 
-        ON producto.id_Marca = marca.id_Marca WHERE $filter = ?";
+        ON producto.id_Marca = marca.id_Marca WHERE producto.$filter = ?";
+        
+        
         $queryDB = $this->db->prepare($query); // paso la consulta completa
         $queryDB->execute();
-    }
+        $products = $queryDB->fetchAll(PDO::FETCH_OBJ);
+        return $products;
 
     
-   
+    }
 
 
     function getById($id)
