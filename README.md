@@ -2,9 +2,9 @@
 
 **Parametros**: 
 
-orderBy: Con este podras especificar que campo queres ordenar 
+**orderBy**: Con este podras especificar que campo queres ordenar 
 
-sort: Es la forma en la que sera ordenado ya sea ASC o DESC
+**sort**: Es la forma en la que sera ordenado ya sea ASC o DESC
 
 Los metodos que se podran utilizar en esta API son los siguientes: 
 
